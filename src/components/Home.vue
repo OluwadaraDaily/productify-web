@@ -1,5 +1,6 @@
 <template>
   <div>
+
     <div class="popup" id="popup-1">
       <div class="overlay"></div>
       
@@ -11,31 +12,10 @@
     </div>
     
     <div class="product-container">
-      <div class="product-card">
-        <img class="product-image" src="@/assets/product-1.jpg">
-        <p class="product-description"> Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-        <p class="product-price">$19.99</p>
-        <button @click="togglePopup" class="add-to-cart-btn"> Add to Cart </button>
-      </div>
-
-      <div class="product-card">
-        <img class="product-image" src="@/assets/product-2.jpg">
-        <p class="product-description"> Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-        <p class="product-price">$19.99</p>
-        <button @click="togglePopup" class="add-to-cart-btn"> Add to Cart </button>
-      </div>
-
-      <div class="product-card">
-        <img class="product-image" src="@/assets/product-3.jpg">
-        <p class="product-description"> Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-        <p class="product-price">$19.99</p>
-        <button @click="togglePopup" class="add-to-cart-btn"> Add to Cart </button>
-      </div>
-
-      <div class="product-card">
-        <img class="product-image" src="@/assets/product-4.jpg">
-        <p class="product-description"> Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-        <p class="product-price">$19.99</p>
+      <div v-for="product in products" :key="product.id" class="product-card">
+        <img class="product-image" :src="product.image_url">
+        <p class="product-description"> {{ product.name }}</p>
+        <p class="product-price">{{ product.price }}</p>
         <button @click="togglePopup" class="add-to-cart-btn"> Add to Cart </button>
       </div>
     </div>        
@@ -43,8 +23,21 @@
 </template>
 
 <script>
+import axios from 'axios'
 export default {
   name: 'Home',
+  data () {
+    return {
+      products: null
+    }
+  },
+
+  mounted () {
+      console.log("uihbiuui");
+      axios.get('https://productify-app.herokuapp.com/api/products')
+      .then(response => {this.products = response.data})
+    },
+  
   methods: {
     togglePopup() {
       document.getElementById("popup-1").classList.toggle("active");

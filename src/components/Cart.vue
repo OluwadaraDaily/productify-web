@@ -8,7 +8,6 @@
 
 		<div class="cart-item">
 			<img class="cart-item-image" src="@/assets/product-5.jpg">
-			<!-- <p class="cart-item-description">Lorem ipsum dolor sit amet, consectetur adipiscing elit</p> -->
 			<p class="cart-item-quantity">2</p>
 			<p class="cart-item-price">$39.99</p>
 		</div>
