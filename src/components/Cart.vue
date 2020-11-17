@@ -1,17 +1,17 @@
 <template>
-	<div>
+	<div>		
 		<div class="cart-header">
 			<h1> Product Image </h1>
 			<h1> Product Quantity </h1>
 			<h1> Total Price </h1>
 		</div>
 
-		<div class="cart-item">
-			<img class="cart-item-image" src="@/assets/product-5.jpg">
-			<p class="cart-item-quantity">2</p>
-			<p class="cart-item-price">$39.99</p>
+		<div v-for="product in products" :key="product.id" class="cart-item">
+			<img class="cart-item-image" :src="product.image_url">
+			<p class="cart-item-quantity">1</p>
+			<p class="cart-item-price">{{ product.price }}</p>
 		</div>
-		<div class="cart-item">
+		<!-- <div class="cart-item">
 			<img class="cart-item-image" src="@/assets/product-6.jpg">
 			<p class="cart-item-quantity">5</p>
 			<p class="cart-item-price">$339.99</p>
@@ -27,15 +27,28 @@
 			<img class="cart-item-image" src="@/assets/product-8.jpg">
 			<p class="cart-item-quantity">8</p>
 			<p class="cart-item-price">$3339.99</p>
-		</div>
+		</div> -->
 	</div>
 </template>
 
 <script>
+import axios from 'axios'
 export default {
 	name: "Cart",
+	data () {
+		return {
+			products:null
+		}
+	},
+
 	components: {
-  }
+  },
+
+  mounted () {
+      console.log("uihbiuui");
+      axios.get('https://productify-app.herokuapp.com/api/products')
+      .then(response => {this.products = response.data})
+    }
   
 }
 </script>

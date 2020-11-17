@@ -2,13 +2,15 @@ import Vue from 'vue'
 import App from './App.vue'
 import VueRouter from 'vue-router'
 import  routes from './routes'
-// import VueAxios from './plugins/axios'
+import Vuex from "vuex";
+
 
 Vue.config.productionTip = false;
 Vue.use(VueRouter);
-// Vue.use(VueAxios)
+Vue.use(Vuex);
 
-// export const axios = axios
+
+
 
 const router = new VueRouter({
 	routes
