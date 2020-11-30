@@ -1,54 +1,46 @@
 <template>
 	<div>		
-		<div class="cart-header">
-			<h1> Product Image </h1>
-			<h1> Product Quantity </h1>
-			<h1> Total Price </h1>
+		<div v-if="cart" class="cart-header">
+			<h4> Product Image </h4>
+			<h4> Product Quantity </h4>
+			<h4> Price </h4>
 		</div>
 
-		<div v-for="product in products" :key="product.id" class="cart-item">
+		<div id="empty-cart" v-if="!cart">
+			<h2> Cart is empty </h2>
+			<h3>{{ cart }} 9087098098</h3>
+
+		</div>
+		<div v-if="cart">
+			{{ cart }}
+		</div>
+		<div v-for="product in cart" :key="product.id" class="cart-item">
+			<img v-if="!product.image_url" class="cart-item-image" src="@/assets/default.jpg">
 			<img class="cart-item-image" :src="product.image_url">
 			<p class="cart-item-quantity">1</p>
 			<p class="cart-item-price">{{ product.price }}</p>
 		</div>
-		<!-- <div class="cart-item">
-			<img class="cart-item-image" src="@/assets/product-6.jpg">
-			<p class="cart-item-quantity">5</p>
-			<p class="cart-item-price">$339.99</p>
-		</div>
-
-		<div class="cart-item">
-			<img class="cart-item-image" src="@/assets/product-7.jpg">
-			<p class="cart-item-quantity">3</p>
-			<p class="cart-item-price">$39.99</p>
-		</div>
-
-		<div class="cart-item">
-			<img class="cart-item-image" src="@/assets/product-8.jpg">
-			<p class="cart-item-quantity">8</p>
-			<p class="cart-item-price">$3339.99</p>
-		</div> -->
 	</div>
 </template>
 
 <script>
 import axios from 'axios'
+import {mapGetters} from 'vuex'
 export default {
 	name: "Cart",
-	data () {
-		return {
-			products:null
-		}
-	},
 
 	components: {
   },
 
-  mounted () {
-      console.log("uihbiuui");
-      axios.get('https://productify-app.herokuapp.com/api/products')
-      .then(response => {this.products = response.data})
-    }
+  async created () {
+	const response = await axios.get('cart')
+	this.products = response.data.order_items
+	console.log(response.data.order_items)
+  },
+
+  computed: {
+	...mapGetters(['cart'])
+  }
   
 }
 </script>

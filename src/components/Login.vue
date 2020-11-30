@@ -1,32 +1,69 @@
 <template>
   <div>
+	<div id="notification">
+		{{ notification }}
+	</div>
+
 	<div class="logo-container">
 		<img src="@/assets/logo.png" height="200">	
 	</div>
     
     <div class="form-container">
-		<div class="input-container">
-			<input type="text" name="username" placeholder="Enter Username...">
-		</div>
-		<div class="input-container">
-			<input type="password" name="password" placeholder="Enter Password...">
-		</div>
-		<button class="login-btn">Login</button>
-		<div class="auth-links">
-			<p>Create Account</p>
-			<p>Forgot Password</p>
-		</div>
+		<form method="POST" @submit.prevent="logIn">
+			<!-- {{ csrfField() }} -->
+			<div class="input-container">
+				<input type="email" name="email" v-model="email" placeholder="Enter Email...">
+			</div>
+
+			<div class="input-container">
+				<input type="password" name="password" v-model="password" 
+				placeholder="Enter Password...">
+			</div>
+			<button class="login-btn">Login</button>
+		</form>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
 export default {
 	name: "Login",
+	data () {
+		return {
+			email: "daraoloye99@gmail.com",
+			password: "password",
+			notification: null
+		}
+	},
 	components: {
+  },
+  methods: {
+	async logIn () {
+		const body = {
+			email: this.email,
+			password: this.password
+		}
+
+		const response = await axios.post('login', body)
+		if (!response.data.error) {
+			console.log(response)
+			localStorage.setItem('token', response.data.access_token.token)
+			this.$store.dispatch('user', response.data.user)
+			this.$router.push('/')	
+		}
+		else {
+			
+			let notification = document.getElementById('notification');
+			notification.className += 'alert alert-danger';
+			this.notification = "Incorrect Email or Password";
+		}
+
+		
+	}
   }
-  
 }
+  
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

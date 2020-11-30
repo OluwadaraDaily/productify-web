@@ -6,12 +6,23 @@
 </template>
 
 <script>
-import Navbar from './components/Navbar.vue'
+import Navbar from '@/components/Navbar.vue'
+import axios from 'axios'
 
 export default {
   name: 'App',
   components: {
     Navbar
+  },
+
+  async created () {
+    const response = await axios.get('user')
+
+    this.$store.dispatch('user', response.data)
+  },
+
+  mounted () {
+    
   }
 }
 </script>

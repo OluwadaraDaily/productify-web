@@ -6,21 +6,39 @@
 			<i class="fas fa-bars"></i>
 		</label>
 		<label class="logo">Productify</label>
-		<ul>
-			<li><a><router-link to="/"> Home </router-link></a></li>
-			<li><a><router-link to="/cart"> Cart </router-link> </a></li>
-			<li><a> <router-link to="/login"> Login </router-link> </a></li>
-			<li><a> <router-link to="/"> Logout </router-link> </a></li>
+		<ul v-if="!user">
+      <li><a> <router-link to="/login"> Login </router-link> </a></li>
       <li><a> <router-link to="/signup"> Sign Up </router-link> </a></li>
-		</ul>
+    </ul>
+
+    <ul v-if="user">
+      <li><a><router-link to="/"> Home </router-link></a></li>
+      <li><a><router-link to="/cart"> Cart </router-link> </a></li>
+      <li><a href="javascript:void(0)" @click="logOut"> Logout </a></li>
+    </ul>
+
 	</nav>    
   </div>
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
 export default {
-	name: 'Navbar' 
-}
+	name: 'Navbar',
+
+  methods: {
+    async logOut() {
+      await localStorage.removeItem('token');
+      this.$store.dispatch('user', null)
+      this.$router.push('/login')
+    }
+  },
+
+  computed: {
+    ...mapGetters(['user'])
+  }
+} 
+
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->

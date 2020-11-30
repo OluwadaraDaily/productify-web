@@ -1,14 +1,8 @@
 <template>
   <div>
-
-    <div class="popup" id="popup-1">
-      <div class="overlay"></div>
-      
-      <div class="content">
-        <div class="close-btn" @click="togglePopup">&times;</div>
-        <h1>Added to Cart!</h1>
-        <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Illo aspernatur laborum rem sed laudantium excepturi veritatis voluptatum architecto, dolore quaerat totam officiis nisi animi accusantium alias inventore nulla atque debitis.</p>
-      </div>
+    <div>
+      <h3 id="greet" v-if="user"> Hello, {{ user.username }} </h3>
+      <h3 v-if="!user"> You are not logged in  </h3>  
     </div>
     
     <div class="product-container">
@@ -16,7 +10,7 @@
         <img class="product-image" :src="product.image_url">
         <p class="product-description"> {{ product.name }}</p>
         <p class="product-price">{{ product.price }}</p>
-        <button @click="togglePopup" class="add-to-cart-btn"> Add to Cart </button>
+        <button @click="addToCart(product.id)" class="add-to-cart-btn"> Add to Cart </button>
       </div>
     </div>        
   </div>
@@ -24,30 +18,57 @@
 
 <script>
 import axios from 'axios'
+import {mapGetters} from 'vuex'
 export default {
   name: 'Home',
+
   data () {
     return {
-      products: null
+      products: null,
     }
   },
 
-  mounted () {
-      console.log("uihbiuui");
-      axios.get('https://productify-app.herokuapp.com/api/products')
-      .then(response => {this.products = response.data})
+  async mounted () {
+      const response = await axios.get('api/products')
+      this.products = response.data
     },
   
   methods: {
-    togglePopup() {
-      document.getElementById("popup-1").classList.toggle("active");
+    async addToCart (id) {
+
+      const response1 = await axios.get('cart')
+      // this.products = response.data.order_items
+      // console.log(response.data.order_items)
+
+      const body = {
+        id: id
+      }
+
+      const response2 = await axios.post('cart', body)
+      
+
+      response1.data.order_items.push(response2.data.order_item)
+
+      console.log(response1.data.order_items);
+      console.log(response2.data.order_items);
+
+      this.$store.dispatch('cart', response2.data.order_items)
     }
+  },
+
+  computed: {
+    ...mapGetters(['user'])
   }
 }
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  #greet {
+    margin: 18px 0;
+    text-align: center;
+    color: #333b59;
+  }
   .product-container {
     margin-top: 10px;
     display: flex;

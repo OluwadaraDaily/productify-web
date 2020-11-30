@@ -1,30 +1,83 @@
 <template>
   <div>
+	<div v-if="notification" id="notification">
+		{{ notification }}
+	</div>
 	<div class="logo-container">
 		<img src="@/assets/logo.png" height="200">	
 	</div>
     
     <div class="form-container">
-		<div class="input-container">
-			<input type="email" name="email" placeholder="Enter Email...">
-		</div>
-		
-		<div class="input-container">
-			<input type="text" name="username" placeholder="Enter Username...">
-		</div>
+		<form method="POST" @submit.prevent="signUp">
 
-		<div class="input-container">
-			<input type="password" name="password" placeholder="Enter Password...">
-		</div>
-		<button class="login-btn">Register</button>
+			<div class="input-container">
+				<input type="email" name="email" v-model="email" placeholder="Enter Email...">
+			</div>
+
+			<div class="input-container">
+				<input type="tel" name="phone" v-model="phone" placeholder="Enter Telephone Number...">
+			</div>
+			
+			<div class="input-container">
+				<input type="text" name="username" v-model="username" placeholder="Enter Username...">
+			</div>
+
+			<div class="input-container">
+				<input type="password" name="password" v-model="password" 
+				placeholder="Enter Password...">
+			</div>
+			<button class="login-btn">Register</button>
+		</form>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
-	name: "Login",
+	name: "Signup",
 	components: {
+  },
+  data () {
+	return {
+		email: "daraoloye99@gmail.com",
+		phone: "08101217017",
+		username: "Oluwadara",
+		password: "oluwadara",
+		notification: null
+	}
+  }, 
+  methods: {  	
+	async signUp() {
+
+		const body = {
+		email: this.email,
+		phone: this.phone,
+		username: this.username,
+		password: this.password,
+		notification: null
+		}
+
+		const response = await axios.post('register', body)
+
+		console.log(response)
+
+		if(response.data.message == "Already existing account") {
+			let notification = document.getElementById("notification")
+			notification.className += "alert alert-danger"
+			this.notification = response.data.message	
+		}
+
+		else {
+			let notification = document.getElementById("notification")
+			notification.className += "alert alert-success"
+			console.log(response.data)
+			this.notification = "You are now registered!"
+			this.$router.push('/login')
+		}
+
+	}
   }
   
 }
