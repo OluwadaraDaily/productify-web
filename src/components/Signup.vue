@@ -1,6 +1,6 @@
 <template>
   <div>
-	<div v-if="notification" id="notification">
+	<div id="notification">
 		{{ notification }}
 	</div>
 	<div class="logo-container">
