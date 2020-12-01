@@ -10,7 +10,7 @@
         <img class="product-image" :src="product.image_url">
         <p class="product-description"> {{ product.name }}</p>
         <p class="product-price">{{ product.price }}</p>
-        <button @click="addToCart(product.id)" class="add-to-cart-btn"> Add to Cart </button>
+        <button @click="addToCart(product.id, product.name, product.price, product.image_url)" class="add-to-cart-btn"> Add to Cart </button>
       </div>
     </div>        
   </div>
@@ -28,31 +28,48 @@ export default {
     }
   },
 
+  created () {
+	if(!this.user) {
+		this.$router.push('login')
+	}
+},
+
   async mounted () {
+		
       const response = await axios.get('api/products')
       this.products = response.data
     },
   
   methods: {
-    async addToCart (id) {
+    async addToCart (id, name, price, image_url) {
 
-      const response1 = await axios.get('cart')
+      console.log(id, name, price, image_url)
+
+      this.$store.dispatch('addToCart', {
+		id: id,
+		name: name,
+		price: price,
+		image_url: image_url
+      })
+
+      
+      // const response1 = await axios.get('cart')
       // this.products = response.data.order_items
       // console.log(response.data.order_items)
 
-      const body = {
-        id: id
-      }
+      // const body = {
+      //   id: id
+      // }
 
-      const response2 = await axios.post('cart', body)
+      // const response2 = await axios.post('cart', body)
       
 
-      response1.data.order_items.push(response2.data.order_item)
+      // response1.data.order_items.push(response2.data.order_item)
 
-      console.log(response1.data.order_items);
-      console.log(response2.data.order_items);
+      // console.log(response1.data.order_items);
+      // console.log(response2.data.order_items);
 
-      this.$store.dispatch('cart', response2.data.order_items)
+      // this.$store.dispatch('cart', response2.data.order_items)
     }
   },
 

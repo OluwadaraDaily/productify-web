@@ -5,6 +5,7 @@ Vue.use(Vuex);
 
 const state = {
 	user: null,
+	order_item:{id:'', name:'', price:0, image_url:'', qty:0},
 	cart: []
 };
 
@@ -23,8 +24,13 @@ const mutations = {
 		state.user = user;
 	},
 
-	cart(state, cart) {
-		state.cart.push(cart);	
+	addToCart: (state, payload) => {
+		Vue.set(state.order_item, 'id', payload.id);
+		Vue.set(state.order_item, 'name', payload.name);
+		Vue.set(state.order_item, 'price', payload.price);
+		Vue.set(state.order_item, 'image_url', payload.image_url);
+		Vue.set(state.order_item, 'qty', 1);
+		state.cart.push(payload)
 	}
 };
 
@@ -33,8 +39,8 @@ const actions = {
 		context.commit('user', user);
 	},
 
-	cart(context, cart) {
-		context.commit('cart', cart)
+	addToCart: (context, payload) => {
+		context.commit('addToCart', payload)
 	}
 };
 
